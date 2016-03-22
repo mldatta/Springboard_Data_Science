@@ -1,0 +1,39 @@
+titanic <- read.csv("titanic_original.csv")
+#write.csv(titanic2, "titanic_clean.csv")
+
+titanic2 <-
+titanic %>% 
+# exclude NA/null row
+filter(pclass != "NA") %>% 
+ #populate the age with mean
+group_by(age) %>% 
+mutate(age = ifelse(is.na(age), mean(age, na.rm = T), age)) %>% 
+#populate boat
+group_by(boat) %>% 
+mutate(boat = ifelse(boat == "", "NA", boat)) %>% 
+#add has cabin number column
+mutate(has_cabin_number = ifelse(cabin == "",0,1))%>%
+
+
+
+mutate(embarked = ifelse(embarked == "", "S", embarked)) 
+
+
+
+-------------------------------------
+titanic$embarked <- ifelse(ifelse(titanic$embarked == "S", "S",
+ifelse(titanic$embarked == "c", "C", 
+ifelse(titanic$embarked == "Q", "Q",
+ifelse(titanic$embarked == "", "S","NA")))))
+
+#populate embarked
+group_by(embarked) %>% 
+mutate(embarked = ifelse(embarked = "S", "S",
+ifelse(embarked = "c", "C", 
+ifelse(embarked = "Q", "Q",
+ifelse(embarked == "", "S","NA"))))) 
+
+
+
+
+titanic$embarked <- titanic$embarked = ifelse(embarked == "", "S", titanic$embarked)
