@@ -1,0 +1,45 @@
+#library(dplyr)
+#library(plyr)
+
+#read data file to mydata
+mydata <- read.csv("refine_original.csv")
+#solution from google community to change company name
+comp <- mydata$company;
+compNew <- NULL
+compNew <- vector(mode="character", length=length(comp))
+i <- 1;
+for(compn in comp)
+{
+cat("\n Currently Processing : ", compn);
+ifelse(grepl("^[P|p|p|f]+", compn) , 
+compNew[i] <- "philips",
+ifelse(grepl("^[A|a]+", compn),
+compNew[i] <- "akzo",
+ifelse(grepl("^[Va|va]+", compn),
+compNew[i] <- "van houten",
+ifelse(grepl("^[u|U]+", compn),
+compNew[i] <- "unilever","NA")
+)
+)
+);
+cat(" Replaced By ",compNew[i]);
+i <- i + 1;
+}
+
+mydata$company <- compNew %>% 
+
+#my work
+mydata %>% 
+separate(Product.code...number, c("product_code","product_number"), sep = "-") %>%
+mutate(product_category = revalue(product_code, c("p"="smartphone", "v"="TV", "x"="laptop", "q"="tablet"))) %>%
+mutate(full_address = paste(address,city,country, sep=", ")) %>%
+mutate(company_philips = ifelse(company == "philips",1,0)) %>%
+mutate(company_akzo = ifelse(company == "akzo",1,0)) %>%
+mutate(company_van_houton = ifelse(company == "van houten",1,0)) %>%
+mutate(company_unilever = ifelse(company == "unilever",1,0)) %>% 
+mutate(product_smartphone = ifelse(product_category == "smartphone",1,0)) %>%
+mutate(product_tv = ifelse(product_category == "TV",1,0)) %>%
+mutate(product_laptop = ifelse(product_category == "laptop",1,0)) %>%
+mutate(product_tablet = ifelse(product_category == "tablet",1,0))
+
+
